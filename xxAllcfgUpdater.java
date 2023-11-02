@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class xxAllUpdater {
+public class xxAllcfgUpdater {
     public static void main(String[] args) {
         //使用するファイル名を定義
         String inputFileName = "BlockAndItemWithMetaNames.txt";
