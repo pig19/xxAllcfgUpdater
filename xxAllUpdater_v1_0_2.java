@@ -8,6 +8,9 @@ v1.0.1(2023/11/02)
 UpdateConfigSettingメソッドをdeleteConfigIdsメソッドに名称変更、不要なreplace引数を削除、searchへ統合
 実質的な仕様変更はしていないためコンパイルはせず確認していない
 -----------------
+v1.0.2(2023/11/02)
+digAllへの対応
+-----------------
 */
 
 import java.io.BufferedReader;
@@ -19,20 +22,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class xxAllUpdaterG3A2 {
+public class xxAllUpdater_v1_0_2 {
     public static void main(String[] args) {
         //使用するファイル名を定義
         String inputFileName = "BlockAndItemWithMetaNames.txt";
         String mineallConfigFileName = "..\\config\\net.minecraft.scalar.mineall.mod_mineallsmp.cfg";
         String cutallConfigFileName = "..\\config\\net.minecraft.scalar.cutall.mod_cutallsmp.cfg";
+        String digallConfigFileName = "..\\config\\net.minecraft.scalar.digall.mod_digallsmp.cfg";
 
         // Reset config
         //設定済みitemIDなどを一旦消去
         deleteConfigIds(mineallConfigFileName, "S:blockIds=");
         deleteConfigIds(mineallConfigFileName, "S:itemIds=");
+
         deleteConfigIds(cutallConfigFileName, "S:blockIds=");
         deleteConfigIds(cutallConfigFileName, "S:itemIds=");
         deleteConfigIds(cutallConfigFileName, "S:leaveIds=");
+
+        deleteConfigIds(digallConfigFileName, "S:itemIds=");
                 
 
         //条件に合致したitem/blockIDを入れておく配列
@@ -41,6 +48,7 @@ public class xxAllUpdaterG3A2 {
         List<String> log = new ArrayList<>();
         List<String> axe = new ArrayList<>();
         List<String> leave = new ArrayList<>();
+        List<String> shovel = new ArrayList<>();
 
         // 条件に合致したitem/blockIDを配列に格納する
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName))) {
@@ -63,6 +71,8 @@ public class xxAllUpdaterG3A2 {
                         axe.add(part);
                     } else if (part.contains(":leave") || part.contains("_leave")) {
                         leave.add(part);
+                    } else if (part.contains("shovel")) {
+                        shovel.add(part);
                     }
                 }
             }
@@ -80,6 +90,10 @@ public class xxAllUpdaterG3A2 {
         updateConfigFile(cutallConfigFileName, "S:blockIds=", log);
         updateConfigFile(cutallConfigFileName, "S:itemIds=", axe);
         updateConfigFile(cutallConfigFileName, "S:leaveIds=", leave);
+
+        // Update digallConfig
+        //digallの各項目に書き込む
+        updateConfigFile(digallConfigFileName, "S:itemIds=", shovel);
     }
 
 
