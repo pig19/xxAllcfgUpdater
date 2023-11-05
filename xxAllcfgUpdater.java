@@ -1,3 +1,4 @@
+// package xxAllcfgUpdater;
 /*
 v1.0.0(2023/11/01)
 リリース
@@ -10,6 +11,9 @@ UpdateConfigSettingメソッドをdeleteConfigIdsメソッドに名称変更、�
 -----------------
 v1.0.2(2023/11/02)
 digAllへの対応
+-----------------
+v1.0.3(2023/11/05)
+redstone, glowstone, obsidian, ic2oreが対象でない具合を修正
 -----------------
 */
 
@@ -54,27 +58,35 @@ public class xxAllcfgUpdater {
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName))) {
             String line;
 
+            //redstone(lighting)
+            ore.add("lit_redstone_ore, glowstone, obsidian");
+
             //ファイルの終端まで一行ずつ読み込み、lineに入れていく
             while ((line = reader.readLine()) != null) {
-                //読んだ行を","で分割し、partsに入れる
-                String[] parts = line.split(",");
-                //partsから要素を一つずつpartに入れて条件に合致するかを調べる、要素をすべて調べたらforを終了させる
-                for (String part : parts) {
-                    //条件に合致した要素を対応する変数リストに一つずつ格納していく
-                    if (part.contains(":ore") || part.contains("_ore")) {
-                        ore.add(part);
-                    } else if (part.contains("pick")) {
-                        pick.add(part);
-                    } else if (part.contains(":log") || part.contains("_log")) {
-                        log.add(part);
-                    } else if (part.contains("_axe")) {
-                        axe.add(part);
-                    } else if (part.contains(":leave") || part.contains("_leave")) {
-                        leave.add(part);
-                    } else if (part.contains("shovel")) {
-                        shovel.add(part);
+                
+                //行の初めの","区切り部分を文字列を各種ID格納用配列に追加
+                    // String[] parts = line.split(","); //読んだ行を","で分割し、partsに入れる
+                    
+                    if (line.contains(":ore") || line.contains("_ore")) {
+                        String[] parts = line.split(",");
+                        ore.add(parts[0]);
+                    } else if (line.contains("pick")) {
+                        String[] parts = line.split(",");
+                        pick.add(parts[0]);
+                    } else if (line.contains(":log") || line.contains("_log")) {
+                        String[] parts = line.split(",");
+                        log.add(parts[0]);
+                    } else if (line.contains("_axe")) {
+                        String[] parts = line.split(",");
+                        axe.add(parts[0]);
+                    } else if (line.contains(":leave") || line.contains("_leave")) {
+                        String[] parts = line.split(",");
+                        leave.add(parts[0]);
+                    } else if (line.contains("shovel")) {
+                        String[] parts = line.split(",");
+                        shovel.add(parts[0]);
                     }
-                }
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -106,6 +118,7 @@ public class xxAllcfgUpdater {
             String line;
 
             //書き込みtxt全体
+            //ic2はic2:resourceでまとめられているため単独で入れておく
             String input = "";
 
             //ファイルの終端まで一行ずつ読み込み、lineに入れていく
